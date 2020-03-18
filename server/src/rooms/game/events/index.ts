@@ -6,7 +6,7 @@ import {
   Role,
   TradeData,
   Resource,
-  ResourceAmountData
+  MarsLogCategory
 } from '@port-of-mars/shared/types';
 import {
   ChatMessage,
@@ -25,6 +25,8 @@ import { CompulsivePhilanthropy, PersonalGain,
         from '@port-of-mars/server/rooms/game/state/marsEvents/state';
 import * as entities from '@port-of-mars/server/entity/GameEvent';
 import _ from "lodash";
+
+const systemHealthCategory = MarsLogCategory.systemHealth;
 
 class GameEventDeserializer {
   protected lookups: { [classname: string]: { new(data?: any): GameEvent }} = {};
@@ -204,13 +206,13 @@ export class EnteredMarsEventPhase extends KindOnlyGameEvent {
     game.upkeep = game.nextRoundUpkeep();
 
     // system health - contributed upkeep
-    game.log(`Your group invested a total of ${contributedUpkeep} into System Health during the last round.`, `SYSTEM HEALTH`);
+    game.log(`Your group invested a total of ${contributedUpkeep} into System Health during the last round.`, systemHealthCategory);
 
     // system health - wear and tear
-    game.log(`Standard wear and tear reduced System Health by 25.`, `SYSTEM HEALTH`);
+    game.log(`Standard wear and tear reduced System Health by 25.`, systemHealthCategory);
 
     // current system health
-    game.log(`System Health is currently ~${game.upkeep}`,`SYSTEM HEALTH`);
+    game.log(`System Health is currently ~${game.upkeep}`, systemHealthCategory);
 
     game.resetPlayerReadiness();
     game.resetPlayerContributedUpkeep();
@@ -303,7 +305,7 @@ export class EnteredDefeatPhase extends KindOnlyGameEvent {
     if(game.upkeep <= 0){
       game.phase = Phase.defeat;
       
-      game.log(`System Health has reached zero.`, 'System Health', 'Server');
+      game.log(`System Health has reached zero.`, systemHealthCategory, 'Server');
     }
 
   }

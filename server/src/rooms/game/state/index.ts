@@ -1113,7 +1113,7 @@ export class GameState extends Schema implements GameData {
   
   log(
     message: string,
-    category: string,
+    category: MarsLogCategory,
     performedBy: Role | ServerRole = SERVER
   ): MarsLogMessage {
     const msg = new MarsLogMessage({
@@ -1165,7 +1165,7 @@ export class GameState extends Schema implements GameData {
 
   addTrade(trade: TradeData, reason?: string): void {
     let message: string;
-    let category: string;
+    let category: MarsLogCategory;
     const performedBy: ServerRole = SERVER;
     const toRole: Role = trade.to.role;
     const fromRole: Role = trade.from.role;
@@ -1186,7 +1186,7 @@ export class GameState extends Schema implements GameData {
 
   removeTrade(id: string, reason?: string): void {
     let message: string;
-    let category: string;
+    let category: MarsLogCategory;
     const performedBy: ServerRole = SERVER;
     const toRole: Role = this.tradeSet[id].to.role;
     const fromRole: Role = this.tradeSet[id].from.role;
@@ -1211,7 +1211,7 @@ export class GameState extends Schema implements GameData {
 
   acceptTrade(id: string): void {
     let message: string;
-    let category: string;
+    let category: MarsLogCategory;
     const performedBy: ServerRole = SERVER;
     
     const trade: Trade = this.tradeSet[id];
@@ -1254,7 +1254,7 @@ export class GameState extends Schema implements GameData {
   purchaseAccomplishment(role: Role, accomplishment: AccomplishmentData): void {
     const { label, science, government, legacy, finance, culture, upkeep, victoryPoints } = accomplishment;
     const message: string = `The ${role} purchased an accomplishment: ${label}. Science: ${science}, Government: ${government}, Legacy: ${legacy}, Finance: ${finance}, Culture: ${culture}, System Health: ${upkeep}. This added ${victoryPoints} points to their score.`;
-    const category: string = MarsLogCategory.purchaseAccomplishment;
+    const category: MarsLogCategory = MarsLogCategory.purchaseAccomplishment;
     const performedBy: ServerRole = SERVER;
 
     this.players[role].purchaseAccomplishment(accomplishment);
