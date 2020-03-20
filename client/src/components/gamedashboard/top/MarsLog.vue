@@ -18,8 +18,30 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { MarsLogMessageData } from '@port-of-mars/shared/types';
 
+// create reference instance
+const marked = require('marked');
+
+marked.setOptions({
+  renderer: new marked.Renderer(),
+  highlight(code: string, language: string) {
+    const highlightJS = require('highlight.js');
+    const validLanguage = highlightJS.getLanguage(language) ? language : 'plaintext';
+    return highlightJS.highlight(validLanguage, code).value;
+  },
+
+  pedantic: false,
+  gfm: true,
+  breaks: false,
+  sanitize: false,
+  smartLists: true,
+  smartyPants: true,
+  xhtml: false,
+
+});
+
 @Component({})
 export default class MarsLog extends Vue {
+
   updated() {
     const elem = this.$el.querySelector('.log');
     elem!.scrollTop = elem!.scrollHeight;
